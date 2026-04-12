@@ -13,7 +13,7 @@ function CTASection() {
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
           <a 
-            href="https://discord.gg/jDtXJtzWs3" 
+            href="https://discord.gg/MgrrVexMrQ" 
             target="_blank" 
             rel="noopener noreferrer"
             className="w-full sm:w-auto group relative overflow-hidden bg-zinc-950 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-sm font-black uppercase tracking-wider transition-all duration-200 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] flex items-center justify-center gap-3"
@@ -55,3 +55,4 @@ function CTASection() {
 }
 
 export default CTASection;
+

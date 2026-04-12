@@ -100,16 +100,13 @@ function AnalystDashboard() {
                 Market Analysis
               </button>
               <a
-                href="https://discord.gg/jDtXJtzWs3"
+                href="https://discord.gg/MgrrVexMrQ"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-900 px-3 md:px-4 py-2 md:py-3 rounded-xl text-xs md:text-sm font-bold uppercase tracking-wider transition-colors text-left"
               >
                 Join Discord Server
               </a>
-              <button className="block w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-900 px-3 md:px-4 py-2 md:py-3 rounded-xl text-xs md:text-sm font-bold uppercase tracking-wider transition-colors text-left">
-                Reports
-              </button>
             </div>
           </div>
         </div>
@@ -154,3 +151,4 @@ function AnalystDashboard() {
 }
 
 export default AnalystDashboard;
+

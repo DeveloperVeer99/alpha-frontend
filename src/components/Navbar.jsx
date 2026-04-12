@@ -117,7 +117,7 @@ function Navbar() {
               </Link>
             )}
             <a 
-              href="https://discord.gg/jDtXJtzWs3" 
+              href="https://discord.gg/MgrrVexMrQ" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="hidden sm:block relative group overflow-hidden bg-zinc-950 text-white px-4 md:px-6 py-2 rounded-xl text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-200 hover:shadow-[0_10px_20px_rgba(0,0,0,0.1)]"
@@ -203,7 +203,7 @@ function Navbar() {
               )}
               
               <a 
-                href="https://discord.gg/jDtXJtzWs3" 
+                href="https://discord.gg/MgrrVexMrQ" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="block w-full text-center bg-zinc-950 text-white px-4 py-3 rounded-xl text-sm font-black uppercase tracking-wider transition-all duration-200 hover:bg-zinc-800 mt-4"
@@ -220,3 +220,4 @@ function Navbar() {
 }
 
 export default Navbar;
+

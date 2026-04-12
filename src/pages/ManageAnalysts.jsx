@@ -121,27 +121,27 @@ function ManageAnalysts() {
 
   if (loading) {
     return (
-      <div className="pt-24 min-h-screen bg-gradient-to-br from-zinc-50 via-white to-zinc-100 flex items-center justify-center">
-        <div className="text-zinc-600 text-lg font-bold uppercase tracking-wider">Loading...</div>
+      <div className="pt-16 md:pt-24 min-h-screen bg-gradient-to-br from-zinc-50 via-white to-zinc-100 flex items-center justify-center px-3">
+        <div className="text-zinc-600 text-sm md:text-lg font-bold uppercase tracking-wider">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="pt-24 min-h-screen bg-gradient-to-br from-zinc-50 via-white to-zinc-100 px-4 py-12">
+    <div className="pt-16 md:pt-24 min-h-screen bg-gradient-to-br from-zinc-50 via-white to-zinc-100 px-3 md:px-4 py-6 md:py-12">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 border border-zinc-200 mb-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="bg-white rounded-2xl shadow-lg p-4 md:p-8 border border-zinc-200 mb-4 md:mb-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-zinc-900 mb-2">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight text-zinc-900 mb-1 md:mb-2">
                 Manage Analysts
               </h1>
-              <p className="text-zinc-600">Total Analysts: {analysts.length}</p>
+              <p className="text-sm md:text-base text-zinc-600">Total Analysts: {analysts.length}</p>
             </div>
             <button
               onClick={() => navigate('/admin/dashboard')}
-              className="bg-zinc-950 text-white px-6 py-3 rounded-xl text-sm font-black uppercase tracking-wider hover:bg-zinc-800 transition-colors"
+              className="w-full md:w-auto bg-zinc-950 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl text-xs md:text-sm font-black uppercase tracking-wider hover:bg-zinc-800 transition-colors"
             >
               Back to Dashboard
             </button>
@@ -149,9 +149,9 @@ function ManageAnalysts() {
         </div>
 
         {/* Analysts Table */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-zinc-200">
+        <div className="bg-white rounded-2xl shadow-lg p-3 md:p-6 border border-zinc-200">
           {message.text && (
-            <div className={`mb-4 px-4 py-3 rounded-xl text-sm ${
+            <div className={`mb-3 md:mb-4 px-3 md:px-4 py-2 md:py-3 rounded-xl text-xs md:text-sm ${
               message.type === 'success' ? 'bg-green-50 border border-green-200 text-green-600' : 'bg-red-50 border border-red-200 text-red-600'
             }`}>
               {message.text}
@@ -159,21 +159,21 @@ function ManageAnalysts() {
           )}
 
           {analysts.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-zinc-600 text-lg">No analysts found</p>
+            <div className="text-center py-8 md:py-12">
+              <p className="text-zinc-600 text-sm md:text-lg">No analysts found</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto -mx-3 md:mx-0">
+              <table className="w-full min-w-[800px]">
                 <thead>
                   <tr className="border-b-2 border-zinc-200">
-                    <th className="text-left py-4 px-4 text-xs font-black uppercase tracking-wider text-zinc-700">#</th>
-                    <th className="text-left py-4 px-4 text-xs font-black uppercase tracking-wider text-zinc-700">Name</th>
-                    <th className="text-left py-4 px-4 text-xs font-black uppercase tracking-wider text-zinc-700">Username</th>
-                    <th className="text-left py-4 px-4 text-xs font-black uppercase tracking-wider text-zinc-700">Email</th>
-                    <th className="text-left py-4 px-4 text-xs font-black uppercase tracking-wider text-zinc-700">Discord ID</th>
-                    <th className="text-left py-4 px-4 text-xs font-black uppercase tracking-wider text-zinc-700">Joined</th>
-                    <th className="text-left py-4 px-4 text-xs font-black uppercase tracking-wider text-zinc-700">Actions</th>
+                    <th className="text-left py-3 md:py-4 px-2 md:px-4 text-[10px] md:text-xs font-black uppercase tracking-wider text-zinc-700">#</th>
+                    <th className="text-left py-3 md:py-4 px-2 md:px-4 text-[10px] md:text-xs font-black uppercase tracking-wider text-zinc-700">Name</th>
+                    <th className="text-left py-3 md:py-4 px-2 md:px-4 text-[10px] md:text-xs font-black uppercase tracking-wider text-zinc-700">Username</th>
+                    <th className="text-left py-3 md:py-4 px-2 md:px-4 text-[10px] md:text-xs font-black uppercase tracking-wider text-zinc-700">Email</th>
+                    <th className="text-left py-3 md:py-4 px-2 md:px-4 text-[10px] md:text-xs font-black uppercase tracking-wider text-zinc-700">Discord ID</th>
+                    <th className="text-left py-3 md:py-4 px-2 md:px-4 text-[10px] md:text-xs font-black uppercase tracking-wider text-zinc-700">Joined</th>
+                    <th className="text-left py-3 md:py-4 px-2 md:px-4 text-[10px] md:text-xs font-black uppercase tracking-wider text-zinc-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -184,16 +184,16 @@ function ManageAnalysts() {
                         index % 2 === 0 ? 'bg-white' : 'bg-zinc-50/50'
                       }`}
                     >
-                      <td className="py-4 px-4 text-sm text-zinc-600 font-bold">{index + 1}</td>
+                      <td className="py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm text-zinc-600 font-bold">{index + 1}</td>
                       
                       {/* Name */}
-                      <td className="py-4 px-4 text-sm">
+                      <td className="py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm">
                         {editingAnalyst === analyst._id ? (
                           <input
                             type="text"
                             value={editForm.name}
                             onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                            className="w-full px-2 py-1 border border-zinc-300 rounded text-sm"
+                            className="w-full px-2 py-1 border border-zinc-300 rounded text-xs md:text-sm"
                           />
                         ) : (
                           <span className="text-zinc-900 font-medium">{analyst.name || 'N/A'}</span>
@@ -201,13 +201,13 @@ function ManageAnalysts() {
                       </td>
                       
                       {/* Username */}
-                      <td className="py-4 px-4 text-sm">
+                      <td className="py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm">
                         {editingAnalyst === analyst._id ? (
                           <input
                             type="text"
                             value={editForm.username}
                             onChange={(e) => setEditForm({ ...editForm, username: e.target.value })}
-                            className="w-full px-2 py-1 border border-zinc-300 rounded text-sm"
+                            className="w-full px-2 py-1 border border-zinc-300 rounded text-xs md:text-sm"
                           />
                         ) : (
                           <span className="text-zinc-900">{analyst.username}</span>
@@ -215,13 +215,13 @@ function ManageAnalysts() {
                       </td>
                       
                       {/* Email */}
-                      <td className="py-4 px-4 text-sm">
+                      <td className="py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm">
                         {editingAnalyst === analyst._id ? (
                           <input
                             type="email"
                             value={editForm.email}
                             onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                            className="w-full px-2 py-1 border border-zinc-300 rounded text-sm"
+                            className="w-full px-2 py-1 border border-zinc-300 rounded text-xs md:text-sm"
                           />
                         ) : (
                           <span className="text-zinc-900">{analyst.email}</span>
@@ -229,13 +229,13 @@ function ManageAnalysts() {
                       </td>
                       
                       {/* Discord ID */}
-                      <td className="py-4 px-4 text-sm">
+                      <td className="py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm">
                         {editingAnalyst === analyst._id ? (
                           <input
                             type="text"
                             value={editForm.discordId}
                             onChange={(e) => setEditForm({ ...editForm, discordId: e.target.value })}
-                            className="w-full px-2 py-1 border border-zinc-300 rounded text-sm"
+                            className="w-full px-2 py-1 border border-zinc-300 rounded text-xs md:text-sm"
                           />
                         ) : (
                           <span className="text-zinc-900">{analyst.discordId || 'N/A'}</span>
@@ -243,7 +243,7 @@ function ManageAnalysts() {
                       </td>
                       
                       {/* Joined Date */}
-                      <td className="py-4 px-4 text-sm text-zinc-600">
+                      <td className="py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm text-zinc-600">
                         {new Date(analyst.createdAt).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'short',
@@ -252,18 +252,18 @@ function ManageAnalysts() {
                       </td>
                       
                       {/* Actions */}
-                      <td className="py-4 px-4">
+                      <td className="py-3 md:py-4 px-2 md:px-4">
                         {editingAnalyst === analyst._id ? (
-                          <div className="flex gap-2">
+                          <div className="flex flex-wrap gap-1 md:gap-2">
                             <button
                               onClick={() => handleSaveEdit(analyst._id)}
-                              className="bg-green-600 text-white px-3 py-1 rounded text-xs font-bold uppercase hover:bg-green-700 transition-colors"
+                              className="bg-green-600 text-white px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold uppercase hover:bg-green-700 transition-colors"
                             >
                               Save
                             </button>
                             <button
                               onClick={handleCancelEdit}
-                              className="bg-zinc-400 text-white px-3 py-1 rounded text-xs font-bold uppercase hover:bg-zinc-500 transition-colors"
+                              className="bg-zinc-400 text-white px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold uppercase hover:bg-zinc-500 transition-colors"
                             >
                               Cancel
                             </button>
@@ -275,40 +275,40 @@ function ManageAnalysts() {
                               value={newPassword}
                               onChange={(e) => setNewPassword(e.target.value)}
                               placeholder="New password"
-                              className="px-2 py-1 border border-zinc-300 rounded text-sm"
+                              className="px-2 py-1 border border-zinc-300 rounded text-xs md:text-sm"
                             />
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-1 md:gap-2">
                               <button
                                 onClick={() => handleSavePassword(analyst._id)}
-                                className="bg-green-600 text-white px-3 py-1 rounded text-xs font-bold uppercase hover:bg-green-700 transition-colors"
+                                className="bg-green-600 text-white px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold uppercase hover:bg-green-700 transition-colors"
                               >
                                 Save
                               </button>
                               <button
                                 onClick={() => setChangingPassword(null)}
-                                className="bg-zinc-400 text-white px-3 py-1 rounded text-xs font-bold uppercase hover:bg-zinc-500 transition-colors"
+                                className="bg-zinc-400 text-white px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold uppercase hover:bg-zinc-500 transition-colors"
                               >
                                 Cancel
                               </button>
                             </div>
                           </div>
                         ) : (
-                          <div className="flex gap-2">
+                          <div className="flex flex-wrap gap-1 md:gap-2">
                             <button
                               onClick={() => handleEdit(analyst)}
-                              className="bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold uppercase hover:bg-blue-700 transition-colors"
+                              className="bg-blue-600 text-white px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold uppercase hover:bg-blue-700 transition-colors"
                             >
                               Edit
                             </button>
                             <button
                               onClick={() => handleChangePassword(analyst._id)}
-                              className="bg-orange-600 text-white px-3 py-1 rounded text-xs font-bold uppercase hover:bg-orange-700 transition-colors"
+                              className="bg-orange-600 text-white px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold uppercase hover:bg-orange-700 transition-colors whitespace-nowrap"
                             >
                               Change Pass
                             </button>
                             <button
                               onClick={() => handleDeleteAnalyst(analyst._id, analyst.username)}
-                              className="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold uppercase hover:bg-red-700 transition-colors"
+                              className="bg-red-600 text-white px-2 md:px-3 py-1 rounded text-[10px] md:text-xs font-bold uppercase hover:bg-red-700 transition-colors"
                             >
                               Delete
                             </button>

@@ -17,7 +17,7 @@ function AboutSection() {
               Our team consists of experienced analysts with years of market experience across Forex, Crypto, and Stock markets. We're committed to delivering high-quality signals and fostering a supportive trading community.
             </p>
             <a 
-              href="https://discord.gg/jDtXJtzWs3"
+              href="https://discord.gg/MgrrVexMrQ"
               className="inline-block bg-white text-zinc-900 px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-sm font-black uppercase tracking-wider hover:bg-zinc-100 transition-all duration-200"
             >
               Get Started
@@ -74,3 +74,4 @@ function AboutSection() {
 }
 
 export default AboutSection;
+

@@ -16,7 +16,7 @@ function About() {
           <p className="text-zinc-300 text-sm md:text-base mb-6">
             Direct USDT trading with guaranteed safety, best rates, and no bank freezes
           </p>
-          <a href="https://discord.gg/jDtXJtzWs3" target="_blank" rel="noopener noreferrer" className="inline-block bg-white text-zinc-900 px-6 md:px-8 py-3 md:py-4 rounded-xl font-black uppercase tracking-wider hover:bg-zinc-100 transition-colors text-sm md:text-base">
+          <a href="https://discord.gg/MgrrVexMrQ" target="_blank" rel="noopener noreferrer" className="inline-block bg-white text-zinc-900 px-6 md:px-8 py-3 md:py-4 rounded-xl font-black uppercase tracking-wider hover:bg-zinc-100 transition-colors text-sm md:text-base">
             Join Discord Community
           </a>
         </div>
@@ -236,7 +236,7 @@ function About() {
         <div className="bg-zinc-950 rounded-2xl shadow-lg p-6 md:p-8 text-white text-center">
           <h3 className="text-xl md:text-2xl font-black uppercase mb-4">Ready to Trade?</h3>
           <p className="text-zinc-300 text-sm md:text-base mb-6">Join TORENTO-P2P community and start trading with best rates</p>
-          <a href="https://discord.gg/jDtXJtzWs3" target="_blank" rel="noopener noreferrer" className="inline-block bg-white text-zinc-900 px-8 md:px-12 py-3 md:py-4 rounded-xl font-black uppercase tracking-wider hover:bg-zinc-100 transition-colors text-sm md:text-base">
+          <a href="https://discord.gg/MgrrVexMrQ" target="_blank" rel="noopener noreferrer" className="inline-block bg-white text-zinc-900 px-8 md:px-12 py-3 md:py-4 rounded-xl font-black uppercase tracking-wider hover:bg-zinc-100 transition-colors text-sm md:text-base">
             Join Discord Server
           </a>
         </div>
@@ -246,3 +246,4 @@ function About() {
 }
 
 export default About;
+
