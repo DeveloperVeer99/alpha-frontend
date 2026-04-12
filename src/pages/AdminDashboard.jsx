@@ -125,9 +125,6 @@ function AdminDashboard() {
               >
                 Join Discord Server
               </a>
-              <button className="block w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-900 px-3 md:px-4 py-2 md:py-3 rounded-xl text-xs md:text-sm font-bold uppercase tracking-wider transition-colors text-left">
-                System Settings
-              </button>
             </div>
           </div>
 

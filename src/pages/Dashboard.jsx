@@ -133,9 +133,6 @@ function Dashboard() {
               >
                 View Market News
               </button>
-              <button className="block w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-900 px-3 md:px-4 py-2 md:py-3 rounded-xl text-xs md:text-sm font-bold uppercase tracking-wider transition-colors">
-                Community Forum
-              </button>
             </div>
           </div>
         </div>
