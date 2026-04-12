@@ -9,50 +9,121 @@ function AdminDashboard() {
   const [superAdmins, setSuperAdmins] = useState([]);
   const [analysts, setAnalysts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingAdmin, setEditingAdmin] = useState(null);
+  const [editData, setEditData] = useState({ name: "", email: "" });
+  const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        if (!authService.isAuthenticated()) {
-          navigate("/login");
-          return;
-        }
-        const userData = authService.getCurrentUser();
-
-        if (userData.role !== "superadmin") {
-          navigate("/login");
-          return;
-        }
-
-        setUser(userData);
-        setLoading(false);
-
-        Promise.all([
-          userService.getAllUsers(),
-          userService.getUsersByRole("analyst"),
-          userService.getUsersByRole("superadmin"),
-        ])
-          .then(([usersRes, analystsRes, superAdminsRes]) => {
-            setStats({
-              users: usersRes.count || 0,
-              analysts: analystsRes.count || 0,
-              signals: 0,
-            });
-            setSuperAdmins(superAdminsRes.data || []);
-            setAnalysts(analystsRes.data || []);
-          })
-          .catch((error) => {
-            console.error("Error fetching stats:", error);
-          });
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
+    fetchData();
   }, [navigate]);
+
+  const fetchData = async () => {
+    try {
+      if (!authService.isAuthenticated()) {
+        navigate("/login");
+        return;
+      }
+      const userData = authService.getCurrentUser();
+
+      if (userData.role !== "superadmin") {
+        navigate("/login");
+        return;
+      }
+
+      setUser(userData);
+      setLoading(false);
+
+      Promise.all([
+        userService.getAllUsers(),
+        userService.getUsersByRole("analyst"),
+        userService.getUsersByRole("superadmin"),
+      ])
+        .then(([usersRes, analystsRes, superAdminsRes]) => {
+          setStats({
+            users: usersRes.count || 0,
+            analysts: analystsRes.count || 0,
+            signals: 0,
+          });
+          setSuperAdmins(superAdminsRes.data || []);
+          setAnalysts(analystsRes.data || []);
+        })
+        .catch((error) => {
+          console.error("Error fetching stats:", error);
+        });
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      setLoading(false);
+    }
+  };
+
+  const handleEditClick = (admin) => {
+    setEditingAdmin(admin._id);
+    setEditData({ name: admin.name, email: admin.email });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingAdmin(null);
+    setEditData({ name: "", email: "" });
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleSave = async (adminId) => {
+    if (!editData.name.trim()) {
+      alert("Name cannot be empty");
+      return;
+    }
+
+    if (!editData.email.trim()) {
+      alert("Email cannot be empty");
+      return;
+    }
+
+    if (!validateEmail(editData.email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await userService.updateUser(adminId, { 
+        name: editData.name.trim(),
+        email: editData.email.trim()
+      });
+      
+      // Update local state
+      setSuperAdmins(superAdmins.map(admin => 
+        admin._id === adminId 
+          ? { ...admin, name: editData.name.trim(), email: editData.email.trim() } 
+          : admin
+      ));
+
+      // If editing current user, update user state
+      if (adminId === user.id) {
+        const updatedUser = { 
+          ...user, 
+          name: editData.name.trim(),
+          email: editData.email.trim()
+        };
+        setUser(updatedUser);
+        // Update localStorage
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      }
+
+      setEditingAdmin(null);
+      setEditData({ name: "", email: "" });
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert(error.response?.data?.message || "Failed to update profile");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleLogout = () => {
     authService.logout();
@@ -214,32 +285,91 @@ function AdminDashboard() {
                     key={admin._id}
                     className="bg-zinc-50 rounded-xl p-3 md:p-4 border border-zinc-200"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3">
-                      <div>
-                        <label className="block text-[10px] md:text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">
-                          Name
-                        </label>
-                        <p className="text-xs md:text-sm text-zinc-900 font-medium break-words">
-                          {admin.name}
-                        </p>
+                    {editingAdmin === admin._id ? (
+                      // Edit Mode
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[10px] md:text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">
+                              Name *
+                            </label>
+                            <input
+                              type="text"
+                              value={editData.name}
+                              onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                              className="w-full px-3 py-2 text-xs md:text-sm border border-zinc-300 rounded-lg focus:outline-none focus:border-zinc-900"
+                              disabled={saving}
+                              placeholder="Enter name"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] md:text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">
+                              Email *
+                            </label>
+                            <input
+                              type="email"
+                              value={editData.email}
+                              onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+                              className="w-full px-3 py-2 text-xs md:text-sm border border-zinc-300 rounded-lg focus:outline-none focus:border-zinc-900"
+                              disabled={saving}
+                              placeholder="Enter email"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleSave(admin._id)}
+                            disabled={saving}
+                            className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-bold uppercase hover:bg-green-700 transition-colors disabled:opacity-50"
+                          >
+                            {saving ? "Saving..." : "Save Changes"}
+                          </button>
+                          <button
+                            onClick={handleCancelEdit}
+                            disabled={saving}
+                            className="flex-1 bg-zinc-300 text-zinc-900 px-4 py-2 rounded-lg text-xs md:text-sm font-bold uppercase hover:bg-zinc-400 transition-colors disabled:opacity-50"
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-[10px] md:text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">
-                          Username
-                        </label>
-                        <p className="text-xs md:text-sm text-zinc-900 font-medium break-words">
-                          {admin.username}
-                        </p>
+                    ) : (
+                      // View Mode
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-3 items-center">
+                        <div>
+                          <label className="block text-[10px] md:text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">
+                            Name
+                          </label>
+                          <p className="text-xs md:text-sm text-zinc-900 font-medium break-words">
+                            {admin.name}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-[10px] md:text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">
+                            Username
+                          </label>
+                          <p className="text-xs md:text-sm text-zinc-900 font-medium break-words">
+                            {admin.username}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-[10px] md:text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">
+                            Email
+                          </label>
+                          <p className="text-xs md:text-sm text-zinc-900 font-medium break-all">
+                            {admin.email}
+                          </p>
+                        </div>
+                        <div>
+                          <button
+                            onClick={() => handleEditClick(admin)}
+                            className="w-full bg-zinc-900 text-white px-3 py-2 rounded-lg text-[10px] md:text-xs font-bold uppercase hover:bg-zinc-800 transition-colors"
+                          >
+                            Edit Profile
+                          </button>
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-[10px] md:text-xs font-bold uppercase tracking-wider text-zinc-500 mb-1">
-                          Email
-                        </label>
-                        <p className="text-xs md:text-sm text-zinc-900 font-medium break-all">
-                          {admin.email}
-                        </p>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 ))}
               </div>
