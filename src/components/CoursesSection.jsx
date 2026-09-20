@@ -371,8 +371,19 @@ function CoursesSection() {
 
   const saveCourse = async (data) => {
     if (data._id) {
-      const { _id, createdAt, updatedAt, ...payload } = data;
-      await courseService.update(_id, payload);
+      const payload = {
+        title: data.title,
+        description: data.description,
+        price: data.price,
+        label: data.label,
+        accent: data.accent,
+        highlights: data.highlights,
+        cta: data.cta,
+        paymentType: data.paymentType,
+        urgency: data.urgency,
+        isActive: data.isActive,
+      };
+      await courseService.update(data._id, payload);
     } else {
       await courseService.create(data);
     }

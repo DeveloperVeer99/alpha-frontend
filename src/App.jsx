@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AdminLoginModal from './components/AdminLoginModal';
 import AdminBar from './components/AdminBar';
+import EditDrawer from './components/EditDrawer';
 import Home from './pages/Home';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           {/* Admin layer */}
           <AdminLoginModal />
           <AdminBar />
+          <EditDrawer />
         </div>
       </Router>
     </AdminProvider>

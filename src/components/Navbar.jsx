@@ -16,6 +16,7 @@ function Navbar() {
     { name: 'Mentor', href: '#mentor' },
     { name: 'Curriculum', href: '#curriculum' },
     { name: 'Community', href: '#community' },
+    { name: 'Courses', href: '#courses' },
     { name: 'FAQ', href: '#faq' },
   ];
 

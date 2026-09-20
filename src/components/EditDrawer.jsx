@@ -2,14 +2,20 @@ import React, { useState } from 'react';
 import API from '../services/api';
 import { useAdmin } from '../context/useAdmin';
 
-// Field definitions per editable section.
-// type: text | textarea | list (string[]) | pairlist ({title, description}[]) | qalist ({question, answer}[])
+// Field definitions per editable section (FXC-style: one drawer per section).
+// type: text | textarea | list (string[]) | pairlist ({title, description}[])
+//       | qalist ({question, answer}[]) | vlist ({value, label}[]) | link (text url)
 const SECTION_FIELDS = {
   hero: [
     { name: 'badge', label: 'Badge Text', type: 'text' },
     { name: 'headlineLine1', label: 'Headline (line 1)', type: 'text' },
     { name: 'headlineHighlight', label: 'Headline (highlighted line)', type: 'text' },
     { name: 'subheadline', label: 'Subheadline', type: 'textarea' },
+    { name: 'ctaText', label: 'Primary Button Text', type: 'text' },
+    { name: 'ctaLink', label: 'Primary Button Link', type: 'link' },
+    { name: 'discordText', label: 'Discord Button Text', type: 'text' },
+    { name: 'discordLink', label: 'Discord Button Link', type: 'link' },
+    { name: 'stats', label: 'Stats (value | label, one per line)', type: 'pipeList', keyA: 'value', keyB: 'label' },
     { name: 'chips', label: 'Feature Chips (one per line)', type: 'list' },
   ],
   mentor: [
@@ -30,19 +36,24 @@ const SECTION_FIELDS = {
     { name: 'description', label: 'Description', type: 'textarea' },
     { name: 'benefits', label: 'Benefits (one per line)', type: 'list' },
     { name: 'ctaText', label: 'Button Text', type: 'text' },
+    { name: 'ctaLink', label: 'Button Link', type: 'link' },
   ],
-  enroll: [
+  courses: [
+    { name: 'badge', label: 'Badge Text', type: 'text' },
     { name: 'title', label: 'Section Title', type: 'text' },
-    { name: 'cardTitle', label: 'Card Title', type: 'text' },
-    { name: 'cardSubtitle', label: 'Card Subtitle', type: 'text' },
-    { name: 'badge', label: 'Top Badge (e.g. Limited Seats)', type: 'text' },
-    { name: 'includes', label: "What's Included (one per line)", type: 'list' },
-    { name: 'ctaText', label: 'Button Text', type: 'text' },
-    { name: 'note', label: 'Note Below Button', type: 'text' },
+    { name: 'subtitle', label: 'Section Subtitle', type: 'textarea' },
+    { name: 'emptyNote', label: 'Empty-state Note (when no courses)', type: 'text' },
   ],
   faq: [
     { name: 'title', label: 'Section Title', type: 'text' },
     { name: 'faqs', label: 'Questions', type: 'qalist' },
+  ],
+  cta: [
+    { name: 'eyebrow', label: 'Eyebrow Text', type: 'text' },
+    { name: 'title', label: 'Heading', type: 'text' },
+    { name: 'description', label: 'Description', type: 'textarea' },
+    { name: 'buttonText', label: 'Button Text', type: 'text' },
+    { name: 'buttonLink', label: 'Button Link', type: 'link' },
   ],
   footer: [
     { name: 'companyName', label: 'Brand Name', type: 'text' },
@@ -57,8 +68,9 @@ const SECTION_LABELS = {
   mentor: 'Mentor Section',
   curriculum: 'Curriculum Section',
   community: 'Community Section',
-  enroll: 'Enroll Section',
+  courses: 'Courses Section',
   faq: 'FAQ Section',
+  cta: 'Final CTA Section',
   footer: 'Footer',
 };
 
@@ -68,7 +80,7 @@ const labelClass = 'block text-[10px] font-black uppercase tracking-[0.15em] tex
 
 // Inner editor — mounts fresh (via key) whenever a section opens.
 // Starts from the content the section was displaying (editingData),
-// so every field is pre-filled with what the site currently shows.
+// so every field is pre-filled with exactly what the site currently shows.
 function SectionEditor({ section, initialData, onClose }) {
   const { refreshContent } = useAdmin();
   const [formData, setFormData] = useState(initialData || {});
@@ -105,7 +117,7 @@ function SectionEditor({ section, initialData, onClose }) {
   const renderField = (field) => {
     const value = formData[field.name];
 
-    if (field.type === 'text' || field.type === 'textarea') {
+    if (field.type === 'text' || field.type === 'textarea' || field.type === 'link') {
       const Tag = field.type === 'text' ? 'input' : 'textarea';
       return (
         <div key={field.name}>
@@ -116,6 +128,7 @@ function SectionEditor({ section, initialData, onClose }) {
             value={value ?? ''}
             onChange={(e) => setValue(field.name, e.target.value)}
             className={inputClass}
+            placeholder={field.type === 'link' ? 'https://…' : undefined}
           />
         </div>
       );
@@ -137,6 +150,37 @@ function SectionEditor({ section, initialData, onClose }) {
             }
             className={`${inputClass} font-mono text-xs`}
             placeholder="One item per line"
+          />
+        </div>
+      );
+    }
+
+    // "value | label" pairs on one line each (hero stats)
+    if (field.type === 'pipeList') {
+      const list = Array.isArray(value) ? value : [];
+      const lines = list.map((item) => `${item?.[field.keyA] ?? ''} | ${item?.[field.keyB] ?? ''}`);
+      return (
+        <div key={field.name}>
+          <label className={labelClass}>{field.label}</label>
+          <textarea
+            rows={Math.max(3, list.length)}
+            value={lines.join('\n')}
+            onChange={(e) =>
+              setValue(
+                field.name,
+                e.target.value
+                  .split('\n')
+                  .map((line) => {
+                    const [a, ...rest] = line.split('|');
+                    return {
+                      [field.keyA]: (a ?? '').trim(),
+                      [field.keyB]: rest.join('|').trim(),
+                    };
+                  })
+              )
+            }
+            className={`${inputClass} font-mono text-xs`}
+            placeholder="500+ | Active Members"
           />
         </div>
       );
@@ -166,7 +210,7 @@ function SectionEditor({ section, initialData, onClose }) {
                 <button
                   type="button"
                   onClick={() => remove(i)}
-                  className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-zinc-700 border border-zinc-600 text-zinc-400 hover:text-red-400 hover:border-red-800 flex items-center justify-center text-xs font-bold transition-colors"
+                  className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-zinc-700 border border-zinc-600 text-zinc-400 hover:text-red-400 hover:border-red-800 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer"
                   title="Remove"
                 >
                   ×
@@ -211,7 +255,7 @@ function SectionEditor({ section, initialData, onClose }) {
             <button
               type="button"
               onClick={add}
-              className="w-full border border-dashed border-zinc-700 hover:border-[#D4AF37] hover:bg-zinc-800 text-zinc-500 hover:text-[#D4AF37] py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all"
+              className="w-full border border-dashed border-zinc-700 hover:border-[#D4AF37] hover:bg-zinc-800 text-zinc-500 hover:text-[#D4AF37] py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all cursor-pointer"
             >
               + Add Item
             </button>
@@ -233,13 +277,13 @@ function SectionEditor({ section, initialData, onClose }) {
       {/* Footer */}
       <div className="flex-shrink-0 px-6 py-4 border-t border-zinc-800 bg-zinc-950">
         {error && <p className="text-red-400 text-xs font-bold mb-3">{error}</p>}
-        {saved && <p className="text-emerald-400 text-xs font-bold mb-3">✓ Saved — live on the website</p>}
+        {saved && <p className="text-emerald-400 text-xs font-bold mb-3">✓ Saved — live on the website & in the database</p>}
         <div className="flex gap-3">
           <button
             type="button"
             onClick={handleSave}
             disabled={loading}
-            className="flex-1 bg-[#D4AF37] hover:bg-[#C9A227] disabled:opacity-40 text-zinc-950 py-3 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all"
+            className="flex-1 bg-[#D4AF37] hover:bg-[#C9A227] disabled:opacity-40 text-zinc-950 py-3 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all cursor-pointer"
           >
             {loading ? 'Saving…' : 'Save Changes'}
           </button>
@@ -247,7 +291,7 @@ function SectionEditor({ section, initialData, onClose }) {
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="flex-1 border border-zinc-700 hover:bg-zinc-800 text-zinc-400 py-3 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all"
+            className="flex-1 border border-zinc-700 hover:bg-zinc-800 text-zinc-400 py-3 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all cursor-pointer"
           >
             Cancel
           </button>
@@ -291,7 +335,7 @@ function EditDrawer() {
             <button
               type="button"
               onClick={closeEditor}
-              className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
+              className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" />

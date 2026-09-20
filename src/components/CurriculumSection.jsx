@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSectionContent } from '../hooks/useSectionContent';
-import { EditBtn, FieldModal } from './InlineEdit';
-import { useAdmin } from '../context/useAdmin';
-import API from '../services/api';
+import EditableArea from './EditableArea';
 
 const DEFAULTS = {
   title: "What You'll Learn",
@@ -27,39 +25,20 @@ const ICONS = [
 ];
 
 function CurriculumSection() {
-  const { content, setContent } = useSectionContent('curriculum', DEFAULTS);
-  const { refreshContent } = useAdmin();
-  const [editing, setEditing] = useState(null);
+  const { content } = useSectionContent('curriculum', DEFAULTS);
   const modules = (content.modules || []).filter((m) => m && m.title);
 
-  const save = async (value) => {
-    const updated = { ...content, [editing.field]: value };
-    setContent(updated);
-    setEditing(null);
-    try { await API.put('/content/curriculum', { data: updated }); refreshContent(); } catch (e) { console.error(e); }
-  };
-
-  const saveModule = async (index, key, value) => {
-    const mods = content.modules.map((m, i) => i === index ? { ...m, [key]: value } : m);
-    const updated = { ...content, modules: mods };
-    setContent(updated);
-    setEditing(null);
-    try { await API.put('/content/curriculum', { data: updated }); refreshContent(); } catch (e) { console.error(e); }
-  };
-
   return (
-    <>
-      <section id="curriculum" className="py-20 md:py-28 bg-zinc-950 scroll-mt-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <section id="curriculum" className="py-20 md:py-28 bg-zinc-950 scroll-mt-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <EditableArea section="curriculum" label="Curriculum" data={content}>
           <div className="text-center mb-14">
             <p className="text-[10px] sm:text-xs font-black uppercase tracking-[0.3em] text-zinc-400 mb-3">The Curriculum</p>
-            <h2 className="group text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
               {content.title}
-              <EditBtn onClick={() => setEditing({ field: 'title', label: 'Section Title', value: content.title })} />
             </h2>
-            <p className="group text-sm md:text-base text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm md:text-base text-zinc-400 max-w-2xl mx-auto leading-relaxed">
               {content.subtitle}
-              <EditBtn onClick={() => setEditing({ field: 'subtitle', label: 'Subtitle', value: content.subtitle, multiline: true })} />
             </p>
           </div>
 
@@ -74,30 +53,18 @@ function CurriculumSection() {
                   </div>
                   <span className="text-2xl font-black text-zinc-700">{String(index + 1).padStart(2, '0')}</span>
                 </div>
-                <h3 className="group/title text-base md:text-lg font-black uppercase tracking-wide text-white mb-2">
+                <h3 className="text-base md:text-lg font-black uppercase tracking-wide text-white mb-2">
                   {module.title}
-                  <EditBtn onClick={() => setEditing({ field: `mod-${index}-title`, label: 'Module Title', value: module.title, modIndex: index, modKey: 'title' })} />
                 </h3>
-                <p className="group/desc text-xs md:text-sm text-zinc-400 leading-relaxed">
+                <p className="text-xs md:text-sm text-zinc-400 leading-relaxed">
                   {module.description}
-                  <EditBtn onClick={() => setEditing({ field: `mod-${index}-desc`, label: 'Module Description', value: module.description, multiline: true, modIndex: index, modKey: 'description' })} />
                 </p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {editing && (
-        <FieldModal
-          label={editing.label}
-          value={editing.value}
-          multiline={editing.multiline}
-          onSave={(val) => editing.modIndex !== undefined ? saveModule(editing.modIndex, editing.modKey, val) : save(val)}
-          onClose={() => setEditing(null)}
-        />
-      )}
-    </>
+        </EditableArea>
+      </div>
+    </section>
   );
 }
 
