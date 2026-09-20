@@ -54,7 +54,7 @@ function CommunitySection() {
                 {content.description}
                 <EditBtn onClick={() => setEditing({ field: 'description', label: 'Description', value: content.description, multiline: true })} />
               </p>
-              <a href="#enroll" className="group inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C9A227] text-zinc-950 px-8 py-3.5 rounded-xl text-xs sm:text-sm font-black uppercase tracking-[0.2em] transition-all duration-200">
+              <a href="https://discord.gg/QJ5jkMsqjj" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C9A227] text-zinc-950 px-8 py-3.5 rounded-xl text-xs sm:text-sm font-black uppercase tracking-[0.2em] transition-all duration-200">
                 {content.ctaText}
                 <EditBtn onClick={() => setEditing({ field: 'ctaText', label: 'Button Text', value: content.ctaText })} />
               </a>
