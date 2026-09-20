@@ -1,58 +1,35 @@
 import API from './api';
 
+const TOKEN_KEY = 'admin_token';
+
 export const authService = {
-  // Register user
-  register: async (userData) => {
-    const response = await API.post('/auth/register', userData);
+  // Admin login with one-line secret key
+  adminLogin: async (secretKey) => {
+    const response = await API.post('/auth/admin-login', { secretKey });
     if (response.data.success && response.data.data.token) {
-      localStorage.setItem('token', response.data.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.data));
+      localStorage.setItem(TOKEN_KEY, response.data.data.token);
     }
     return response.data;
   },
 
-  // Login user
-  login: async (credentials) => {
-    const response = await API.post('/auth/login', credentials);
-    if (response.data.success && response.data.data.token) {
-      localStorage.setItem('token', response.data.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.data));
-    }
-    return response.data;
-  },
-
-  // Logout user
+  // Logout admin
   logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem(TOKEN_KEY);
   },
 
-  // Get current user
-  getCurrentUser: () => {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+  // Get current admin token
+  getToken: () => {
+    return localStorage.getItem(TOKEN_KEY);
   },
 
-  // Check if user is authenticated
+  // Check if admin is authenticated (has a token)
   isAuthenticated: () => {
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem(TOKEN_KEY);
   },
 
-  // Get user profile
-  getProfile: async () => {
-    const response = await API.get('/auth/profile');
-    return response.data;
-  },
-
-  // Reset password
-  resetPassword: async (passwordData) => {
-    const response = await API.put('/auth/reset-password', passwordData);
-    return response.data;
-  },
-
-  // Change password (without auth)
-  changePassword: async (passwordData) => {
-    const response = await API.put('/auth/change-password', passwordData);
+  // Verify the token is still valid against the backend
+  verify: async () => {
+    const response = await API.get('/auth/verify');
     return response.data;
   },
 };

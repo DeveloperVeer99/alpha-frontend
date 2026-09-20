@@ -5,9 +5,11 @@ const API = axios.create({
   withCredentials: true,
 });
 
-// Add token to requests
+const TOKEN_KEY = 'admin_token';
+
+// Add admin token to requests
 API.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem(TOKEN_KEY);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
